@@ -95,6 +95,7 @@ int main() {
 			p1Hand.push_back(randCd);
 			p1Amt++;
 		}
+		cout << "Player 1's Hand\n";
 		cout << p1Hand[0] << "\n";
 		cout << p1Hand[1] << "\n";
 		cout << p1Hand[2] << "\n";
@@ -109,6 +110,7 @@ int main() {
             p2Hand.push_back(randCd);
 			p2Amt++;
 		}
+		cout << "Player 2's Hand\n";
 		cout << p2Hand[0] << "\n";
 		cout << p2Hand[1] << "\n";
 		cout << p2Hand[2] << "\n";
@@ -123,6 +125,7 @@ int main() {
             p3Hand.push_back(randCd);
 			p3Amt++;
 		}
+		cout << "Player 3's Hand\n";
 		cout << p3Hand[0] << "\n";
 		cout << p3Hand[1] << "\n";
 		cout << p3Hand[2] << "\n";
