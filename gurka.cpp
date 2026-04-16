@@ -2,15 +2,6 @@
 #include <vector>
 using namespace std;
 
-/* TO DO:
-1. finish instructions (done)
-2. gameplay loop (done)
-3. pickle out of game mechanic thing (done)
-4. credits (done)
-5. local multiplayer
-6. names
-*/
-
 void printCard(int val, string suit); // prints correct suit & card vaues
 void dealHand(vector<int>& hand, vector<string>& suits); // deals hands
 int findLowest(vector<int>& hand); // finds the lowest card for when bot/player can't match or play higher
@@ -208,10 +199,10 @@ void playGame() {
 
 void printCard(int val, string suit) {
 	if (val < 11) cout << val << suit; // if under 11 normal output
-	else if (val == 11) cout << "Jack" << suit;
-	else if (val == 12) cout << "Queen" << suit;
-	else if (val == 13) cout << "King" << suit;
-	else if (val == 14) cout << "Ace" << suit;
+	else if (val == 11) cout << "jack" << suit;
+	else if (val == 12) cout << "queen" << suit;
+	else if (val == 13) cout << "king" << suit;
+	else if (val == 14) cout << "ace" << suit;
 }
 
 void dealHand(vector<int>& hand, vector<string>& suits) {
