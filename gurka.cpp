@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 using namespace std;
 
 void printCard(int val, string suit); // prints correct suit & card vaues
@@ -11,11 +12,11 @@ void instructions(); // instructions function
 void credits(); // credits function
 
 int main() {
-    
-    // variables
-    int startScreenChoice;
+
+	// variables
+	int startScreenChoice;
 	srand(time(0));
-	
+
 	// startscreen
 	cout << "=======================\n";
 	cout << "gurka!\n";
@@ -24,26 +25,26 @@ int main() {
 	cout << "[2] read instructions\n";
 	cout << "[3] read credits\n";
 	cout << "=======================\n";
-	
+
 	cin >> startScreenChoice;
 	cout << "=======================\n";
-	
+
 	// input validation
 	while (cin.fail() || startScreenChoice < 1 || startScreenChoice > 3) {
-    cin.clear();
-    cin.ignore(1000, '\n');
-    cout << "try again: ";
-    cin >> startScreenChoice;
-    cout << "=======================\n";
+		cin.clear();
+		cin.ignore(1000, '\n');
+		cout << "try again: ";
+		cin >> startScreenChoice;
+		cout << "=======================\n";
 	}
     
-    // user input section
-    if (startScreenChoice == 2) {
-        instructions();
-    } else if (startScreenChoice == 3) {
-        credits();
-    }
-    playGame();
+	// user input section
+	if (startScreenChoice == 2) {
+		instructions();
+	} else if (startScreenChoice == 3) {
+		credits();
+	}
+	playGame();
 }
 
 void instructions() {
@@ -65,74 +66,96 @@ void instructions() {
 	cout << "cards in the last trick they score that number of penelty\n";
 	cout << "points. Any player who reaches a cumulative score of 30 points\n";
 	cout << "is out of the game: the player is said to be a cucumber\n";
-	cout << "=============================\n";	
+	cout << "=============================\n";
 }
 
 void credits() {
-    cout << "credits\n";
-    cout << "=============================\n";
-    cout << "coded by ryan and bode\n";
-	cout << "=============================\n";    
+	cout << "credits\n";
+	cout << "=============================\n";
+	cout << "coded by ryan and bode\n";
+	cout << "=============================\n";
 }
 
 void playGame() {
-    // player point variables
+	// player point variables
 	int p1 = 0;
 	int p2 = 0;
 	int p3 = 0;
+	
+	// names
+	string userName;
+	string bot1Name;
+	string bot2Name;
+	int botNameValue;
+	
+	// names input
+    cout << "enter your name: ";
+    cin >> userName;
+    cout << "type 1 to use custom names for bots, type 2 to use default: ";
+    cin >> botNameValue;
+    if (botNameValue == 1) {
+        cout << "enter bot 1's name: ";
+        cin >> bot1Name;
+        cout << "enter bot 2's name: ";
+        cin >> bot2Name;
+    } else if (botNameValue == 2) {
+        bot1Name = "bot 1";
+        bot2Name = "bot 2";
+    }
     
-    // loop game while score is under 30
+
+	// loop game while score is under 30
 	while (p1 < 30 && p2 < 30 && p3 < 30) {
-    
-        // hands and suits
+
+		// hands and suits
 		vector<int> h1, h2, h3;
 		vector<string> s1, s2, s3;
-        
-        // dealing 
+
+		// dealing
 		dealHand(h1, s1);
 		dealHand(h2, s2);
 		dealHand(h3, s3);
-    
-        // round value
+
+		// round value
 		int round = 0;
-        
-        // special round 6 discluded from normal game loop because it has to be different. stupid game.
+
+		// rounds 1-5
 		while (round < 6) {
 
 			cout << "ROUND " << round + 1 << "\n";
 			cout << "=======================\n";
 
 			int highest = 0;
-        
-            // display hand
-			cout << "your hand\n";
+
+			// display hand
+			cout << userName << "'s hand\n";
 			cout << "=======================\n";
 			for (int i = 0; i < h1.size(); i++) {
 				cout << "[" << i << "] ";
 				printCard(h1[i], s1[i]);
 			}
 
-            // player choice
+			// player choice
 			int choice;
 			cout << "=======================\nchoose a card: ";
 			cin >> choice;
 			cout << "=======================\n";
 
-            // input validation
-            while (cin.fail() || choice < 0 || choice >= h1.size()) {
-            cin.clear();
-            cin.ignore(1000, '\n');
-            cout << "try again: ";
-            cin >> choice;
-            }
+			// input validation
+			while (cin.fail() || choice < 0 || choice >= h1.size()) {
+				cin.clear();
+				cin.ignore(1000, '\n');
+				cout << "try again: ";
+				cin >> choice;
+			}
 
 			int userCard = h1[choice];
-			cout << "you played: ";
+			cout << userName << " played: ";
 			printCard(userCard, s1[choice]);
 
 			highest = userCard;
-            
-            // erase used cards from array
+
+			// erase used cards from array
 			h1.erase(h1.begin() + choice);
 			s1.erase(s1.begin() + choice);
 
@@ -140,8 +163,8 @@ void playGame() {
 			int i2 = findPlayable(h2, highest);
 			int c2 = h2[i2];
 
-            //  bot actions
-			cout << "bot 1 played: ";
+			//  bot actions
+			cout << bot1Name << " played: ";
 			printCard(c2, s2[i2]);
 
 			if (c2 > highest) highest = c2;
@@ -152,49 +175,49 @@ void playGame() {
 			int i3 = findPlayable(h3, highest);
 			int c3 = h3[i3];
 
-			cout << "bot 2 played: ";
+			cout << bot2Name << " played: ";
 			printCard(c3, s3[i3]);
 
 			if (c3 > highest) highest = c3;
 
 			h3.erase(h3.begin() + i3);
 			s3.erase(s3.begin() + i3);
-            
-            // special round 5
+
+			// special round 6
 			if (round == 5) {
 				cout << "=======================\n";
 
 				if (userCard == highest) {
-					cout << "you take " << highest << " points\n";
+					cout << userName << " takes " << highest << " points\n";
 					p1 += highest;
 				}
 				if (c2 == highest) {
-					cout << "bot 1 takes " << highest << " points\n";
+					cout << bot1Name << " takes " << highest << " points\n";
 					p2 += highest;
 				}
 				if (c3 == highest) {
-					cout << "bot 2 takes " << highest << " points\n";
+					cout << bot2Name << " takes " << highest << " points\n";
 					p3 += highest;
 				}
 			}
-            
-            // add to round counter
+
+			// add to round counter
 			round++;
 		}
-        
-        // output scores
+
+		// output scores
 		cout << "=======================\n";
 		cout << "SCORES\n";
 		cout << "=======================\n";
-		cout << "user: " << p1 << "\n";
-		cout << "bot 1: " << p2 << "\n";
-		cout << "bot 2: " << p3 << "\n";
+		cout << userName << ": " << p1 << "\n";
+		cout << bot1Name << ": " << p2 << "\n";
+		cout << bot2Name << ": " << p3 << "\n";
 	}
 
-    // cucumber!
-	if (p1 >= 30) cout << "you are a cucumber!\n";
-	if (p2 >= 30) cout << "bot 1 is a cucumber!\n";
-	if (p3 >= 30) cout << "bot 2 is a cucumber!\n";
+	// cucumber!
+	if (p1 >= 30) cout << userName << " are a cucumber!\n";
+	if (p2 >= 30) cout << bot1Name << " is a cucumber!\n";
+	if (p3 >= 30) cout << bot2Name << " is a cucumber!\n";
 }
 
 void printCard(int val, string suit) {
@@ -222,25 +245,25 @@ void dealHand(vector<int>& hand, vector<string>& suits) {
 }
 
 int findLowest(vector<int>& hand) {
-	int idx = 0;
+	int n1 = 0;
 	for (int i = 1; i < hand.size(); i++) {
-		if (hand[i] < hand[idx]) idx = i;
+		if (hand[i] < hand[n1]) n1 = i;
 	}
-	return idx;
+	return n1;
 }
 
 int findPlayable(vector<int>& hand, int highest) {
-	int idx = -1;
+	int n2 = -1;
 
 	for (int i = 0; i < hand.size(); i++) {
 		if (hand[i] >= highest) { // if hand has any card greater than or equal to, play
-			if (idx == -1 || hand[i] < hand[idx]) {
-				idx = i;
+			if (n2 == -1 || hand[i] < hand[n2]) {
+				n2 = i;
 			}
 		}
 	}
 
-	if (idx == -1) idx = findLowest(hand); // if no card is found, find lowest
+	if (n2 == -1) n2 = findLowest(hand); // if no card is found, find lowest
 
-	return idx; // output lowest
+	return n2; // output lowest
 }
