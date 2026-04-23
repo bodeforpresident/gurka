@@ -118,6 +118,7 @@ void playGame() {
 
 		// round value
 		int round = 0;
+		int lead = 0;
 
 		// rounds 1-5
 		while (round < 6) {
@@ -126,76 +127,91 @@ void playGame() {
 			cout << "=======================\n";
 
 			int highest = 0;
+			int winner = -1;
 
-			// display hand
-			cout << userName << "'s hand\n";
-			cout << "=======================\n";
-			for (int i = 0; i < h1.size(); i++) {
-				cout << "[" << i << "] ";
-				printCard(h1[i], s1[i]);
+			int order[3] = {lead, (lead + 1) % 3, (lead + 2) % 3};
+
+			int cards[3];
+
+			for (int turn = 0; turn < 3; turn++) {
+				int player = order[turn];
+
+				if (player == 0) {
+					// display hand
+					cout << userName << "'s hand\n";
+					cout << "=======================\n";
+					for (int i = 0; i < h1.size(); i++) {
+						cout << "[" << i << "] ";
+						printCard(h1[i], s1[i]);
+					}
+
+					// player choice
+					int choice;
+					cout << "=======================\nchoose a card: ";
+					cin >> choice;
+					cout << "=======================\n";
+
+					// input validation
+					while (cin.fail() || choice < 0 || choice >= h1.size()) {
+						cin.clear();
+						cin.ignore(1000, '\n');
+						cout << "try again: ";
+						cin >> choice;
+					}
+
+					cards[player] = h1[choice];
+					cout << userName << " played: ";
+					printCard(cards[player], s1[choice]);
+
+					// erase used cards from array
+					h1.erase(h1.begin() + choice);
+					s1.erase(s1.begin() + choice);
+				}
+
+				if (player == 1) {
+					int i2 = findPlayable(h2, highest);
+					cards[player] = h2[i2];
+
+					//  bot actions
+					cout << bot1Name << " played: ";
+					printCard(cards[player], s2[i2]);
+
+					h2.erase(h2.begin() + i2);
+					s2.erase(s2.begin() + i2);
+				}
+
+				if (player == 2) {
+					int i3 = findPlayable(h3, highest);
+					cards[player] = h3[i3];
+
+					cout << bot2Name << " played: ";
+					printCard(cards[player], s3[i3]);
+
+					h3.erase(h3.begin() + i3);
+					s3.erase(s3.begin() + i3);
+				}
+
+				if (cards[player] > highest || (cards[player] == highest && turn > 0)) {
+					highest = cards[player];
+					winner = player;
+				}
 			}
 
-			// player choice
-			int choice;
-			cout << "=======================\nchoose a card: ";
-			cin >> choice;
-			cout << "=======================\n";
-
-			// input validation
-			while (cin.fail() || choice < 0 || choice >= h1.size()) {
-				cin.clear();
-				cin.ignore(1000, '\n');
-				cout << "try again: ";
-				cin >> choice;
-			}
-
-			int userCard = h1[choice];
-			cout << userName << " played: ";
-			printCard(userCard, s1[choice]);
-
-			highest = userCard;
-
-			// erase used cards from array
-			h1.erase(h1.begin() + choice);
-			s1.erase(s1.begin() + choice);
-
-
-			int i2 = findPlayable(h2, highest);
-			int c2 = h2[i2];
-
-			//  bot actions
-			cout << bot1Name << " played: ";
-			printCard(c2, s2[i2]);
-
-			if (c2 > highest) highest = c2;
-
-			h2.erase(h2.begin() + i2);
-			s2.erase(s2.begin() + i2);
-
-			int i3 = findPlayable(h3, highest);
-			int c3 = h3[i3];
-
-			cout << bot2Name << " played: ";
-			printCard(c3, s3[i3]);
-
-			if (c3 > highest) highest = c3;
-
-			h3.erase(h3.begin() + i3);
-			s3.erase(s3.begin() + i3);
+			lead = winner;
 
 			// special round 6
 			if (round == 5) {
 				cout << "=======================\n";
 
-				if (userCard == highest) {
+				if (cards[0] == highest) {
 					cout << userName << " takes " << highest << " points\n";
 					p1 += highest;
 				}
-				if (c2 == highest) {
+				if (cards[1] == highest) {
 					cout << bot1Name << " takes " << highest << " points\n";
 					p2 += highest;
 				}
-				if (c3 == highest) {
+				if (cards[2] == highest) {
 					cout << bot2Name << " takes " << highest << " points\n";
 					p3 += highest;
 				}
